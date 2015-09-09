@@ -4,7 +4,9 @@ Backbone.$ = $;
 
 var template = require('../templates/hi.hbs');
 var Messages = require('../collections/messageList');
-var Message = require('../models/messages');
+var Room     = require('../collections/Room');
+var Message  = require('../models/messages');
+var Client   = require('../models/Client');
 
 module.exports = Backbone.View.extend({
   initialize: function(){
@@ -14,11 +16,21 @@ module.exports = Backbone.View.extend({
   el: '#initpoint',
 
   events: {
-    'click #sendinput': 'addToCollection'
+    'click #sendinput': 'addToCollection',
+    'click #usernameSend': 'addUserToRoom'
   },
 
   render: function() {
     $('#initpoint').html(template({ name: "Cowboy" }));
+  },
+
+  addUserToRoom: function() {
+    var username = $('#usernameInput').val();
+    var client = new Client({username: username});
+
+    console.log(client);
+
+    Room.add(client);
   },
 
   addToCollection: function() {
