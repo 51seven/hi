@@ -31,28 +31,34 @@ module.exports = Backbone.View.extend({
 
     var client = new Client({username: username});
 
-    if(client.parseColor(color)) {
+    /*if(client.parseColor(color)) {
       client.set('color', color);
+    }*/
+
+    if(client.isValid()) {
+      $('#usernameSend').attr('disabled', true);
+
+      client.updateLocation()
+      .then(function() {
+
+        /* ToDo: Roomdispatcher */
+
+        Room.add(client);
+
+        $('#chatlog').append(client.get('username'), ' joined the room.');
+        console.log(client.attributes, ' joined the room ('+Room.length+').')
+
+        $('#clients').append('<li style="color: '+client.get('color')+'">'+client.get('username')+'</li>');
+        $('#usernameInput').val("");
+        $('#usernameSend').attr('disabled', false);
+      })
+      .catch(function(err) {
+        console.log(err);
+      });
     }
-
-    $('#usernameSend').attr('disabled', true);
-
-    client.updateLocation()
-    .then(function() {
-
-      /* ToDo: Roomdispatcher */
-      
-      Room.add(client);
-
-      console.log(client.attributes, ' joined to the room ('+Room.length+').')
-
-      $('#clients').append('<li style="color: '+client.attributes.color+'">'+client.attributes.username+'</li>');
-      $('#usernameInput').val("");
-      $('#usernameSend').attr('disabled', false);
-    })
-    .catch(function(err) {
-      console.log(err);
-    });
+    else {
+      console.log(client.validationError);
+    }
   },
 
   addToCollection: function() {

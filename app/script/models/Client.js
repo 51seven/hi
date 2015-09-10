@@ -12,11 +12,18 @@ module.exports = Backbone.Model.extend({
     Backbone.Model.apply(this, arguments); // Applies instance variables
   },*/
   defaults: {
+    'username': '',
     'color': 'lightblue'
   },
   validate: function(attributes, options) {
+    console.log("attributes", attributes);
+
     if(attributes.username.length < 3) {
       return "Username must not be < 3 Characters.";
+    }
+
+    if(!this.parseColor(attributes.color)) {
+      return "Color has no valid format (#fff or #ffffff)";
     }
   },
 
