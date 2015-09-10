@@ -5,8 +5,9 @@ Backbone.$ = $;
 var template = require('../templates/hi.hbs');
 var Messages = require('../collections/messageList');
 var Room     = require('../collections/Room');
-var Message  = require('../models/messages');
+var Message  = require('../models/Message');
 var Client   = require('../models/Client');
+var GeoLocation = require('../models/GeoLocation');
 
 module.exports = Backbone.View.extend({
   initialize: function(){
@@ -25,12 +26,18 @@ module.exports = Backbone.View.extend({
   },
 
   addUserToRoom: function() {
+    /* ToDo: Roomdispatcher */
     var username = $('#usernameInput').val();
     var client = new Client({username: username});
 
-    console.log(client);
-
-    Room.add(client);
+    client.updateLocation()
+    /*.then(function(geo) {
+      Room.add(client);
+      console.log('added '+username+' to the room. ('+Room.length+')')
+    })
+    .catch(function(err) {
+      console.log(err);
+    });*/
   },
 
   addToCollection: function() {

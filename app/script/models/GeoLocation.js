@@ -1,24 +1,27 @@
 var Backbone = require('backbone');
+var Promise = require('bluebird');
 var $ = require('jquery');
 Backbone.$ = $;
 
-var GeoLocation = Backbone.Model.extend({
-  defaults: function() {
-    return {
-      id: null
-      lat: null,
-      lng: null,
-      accuracy: 0,
-      options = {
-        enableHighAccuracy: false,
-        timeout: 5000,
-        maximumAge: 0
-      }
-    };
+_this = {};
+
+module.exports = Backbone.Model.extend({
+  defaults: {
+    'id': null,
+    'lat': null,
+    'lng': null,
+    'accuracy': 0,
+    'options': {
+      'enableHighAccuracy': false,
+      'timeout': 5000,
+      'maximumAge': 0
+    }
   },
-  update: function() {
-    if (navigator.geolocation) {
-      this.id = navigator.geolocation.watchPosition(success, error, this.options);
+  update: function(callback) {
+    _this.callback = callback;
+
+    if(navigator.geolocation) {
+      this.id = navigator.geolocation.watchPosition(this.success, this.error, this.options);
     } 
     else {
       this.error({code: 1337, message: 'Geolocation is not supported :('});
@@ -28,13 +31,18 @@ var GeoLocation = Backbone.Model.extend({
     navigator.geolocation.clearWatch(this.id);
   },*/
   success: function(position) {
-    alert("geolocation successfull");
-
-    return {
-      position.coords.latitude,
-      position.coords.longitude,
-      position.coords.accuracy
+    
+    var geo = {
+      lat: position.coords.latitude,
+      lng: position.coords.longitude,
+      accuracy: position.coords.accuracy
     };
+
+    this.lat = geo.lat;
+    this.lng = geo.lng;
+    this.accuracy = geo.accuracy;
+
+    _this.callback(geo);
   },
   error: function(error) {
     var human_message = "";
@@ -54,6 +62,6 @@ var GeoLocation = Backbone.Model.extend({
           break;
     }
 
-    alert(error.code + " - " + error.message + "("+ human_message +")");
+    console.log(error.code + " - " + error.message + "("+ human_message +")");
   }
 });
