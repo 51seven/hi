@@ -17,22 +17,25 @@ module.exports = Backbone.Model.extend({
   },
   update: function() {
     var _this = this;
-    console.log("options", _this.options);
 
     return new Promise(function(resolve, reject) {
       if(navigator.geolocation) {
         _this.id = navigator.geolocation.watchPosition(function(position) {
           var geo = {
+            watchid: _this.id,
             lat: position.coords.latitude,
             lng: position.coords.longitude,
             accuracy: position.coords.accuracy
           };
 
+          _this.attributes = geo;
+
           resolve(geo);
         },
         function(error) {
           reject(error);
-        });
+        }, 
+        this.defaults);
       } 
       else {
         reject("nope"); //this.error({code: 1337, message: 'Geolocation is not supported :('}));

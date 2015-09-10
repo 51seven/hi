@@ -28,16 +28,17 @@ module.exports = Backbone.View.extend({
   addUserToRoom: function() {
     /* ToDo: Roomdispatcher */
     var username = $('#usernameInput').val();
-    var client = new Client({username: username});
+    var client = new Client({username: username, color: '#f00'});
 
     $('#usernameSend').attr('disabled', true);
 
     client.updateLocation()
     .then(function() {
       Room.add(client);
-      $('#clients').append('<li style="color: '+client.color+'">'+client.username+'</li>');
-      console.log('added '+client.username+' ['+client.geo.lat+'/'+client.geo.lng+'] to the room. ('+Room.length+')')
 
+      console.log('added ', client.attributes, ' to the room. ('+Room.length+')')
+
+      $('#clients').append('<li style="color: '+client.attributes.color+'">'+client.attributes.username+'</li>');
       $('#usernameInput').val("");
       $('#usernameSend').attr('disabled', false);
     })
