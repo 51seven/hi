@@ -24,6 +24,15 @@ module.exports = Backbone.Model.extend({
 
   },
 
+  parseColor: function(code) {
+    if(/(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(code)) {
+      return code;
+    }
+    else {
+      return false;
+    }
+  },
+
   /*setLocation: function(data) {
     this.geo = data;
     console.log("Client location: ", this.geo);
