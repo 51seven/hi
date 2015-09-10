@@ -5,14 +5,15 @@ var $ = require('jquery');
 Backbone.$ = $;
 
 module.exports = Backbone.Model.extend({
-  constructor: function() {
+  constructor: function(data) {
     //this.location = new Geolocation();
-    this.color = "#333";
+    this.username = data.username;
+    this.color = data.color;
     Backbone.Model.apply(this, arguments); // Applies instance variables
   },
-  /*defaults: {
-      username: "empty todo..."
-  },*/
+  defaults: {
+    'color': "#f00"
+  },
   validate: function(attributes, options) {
     if(attributes.username.length < 3) {
       return "Username must not be < 3 Characters.";
@@ -23,15 +24,29 @@ module.exports = Backbone.Model.extend({
 
   },
 
-  setLocation: function(data) {
-    this.location = data;
-
-    console.log("Client location: ", this.location);
-  },
+  /*setLocation: function(data) {
+    this.geo = data;
+    console.log("Client location: ", this.geo);
+  },*/
 
   updateLocation: function() {
     var location = new GeoLocation();
+    _this = this;
+
+    return new Promise(function (resolve, reject) {
+      console.log('starting geolocation...');
+
+      location.update()
+      .then(function(data) {
+        _this.geo = data;
+        resolve("resolve");
+      })
+      .catch(function(error) {
+        console.log("unable to get location: ", error);
+        reject(error);
+      });
+    });
     
-    location.update(this.setLocation);
+    //location.update(this.setLocation);
   }
 });

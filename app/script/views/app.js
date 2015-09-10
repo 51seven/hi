@@ -30,14 +30,20 @@ module.exports = Backbone.View.extend({
     var username = $('#usernameInput').val();
     var client = new Client({username: username});
 
+    $('#usernameSend').attr('disabled', true);
+
     client.updateLocation()
-    /*.then(function(geo) {
+    .then(function() {
       Room.add(client);
-      console.log('added '+username+' to the room. ('+Room.length+')')
+      $('#clients').append('<li style="color: '+client.color+'">'+client.username+'</li>');
+      console.log('added '+client.username+' ['+client.geo.lat+'/'+client.geo.lng+'] to the room. ('+Room.length+')')
+
+      $('#usernameInput').val("");
+      $('#usernameSend').attr('disabled', false);
     })
     .catch(function(err) {
       console.log(err);
-    });*/
+    });
   },
 
   addToCollection: function() {
