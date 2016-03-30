@@ -13,7 +13,7 @@ module.exports = Backbone.Model.extend({
   },*/
   defaults: {
     'username': '',
-    'color': 'lightblue'
+    'color': '#000333'
   },
   validate: function(attributes, options) {
     console.log("attributes", attributes);
@@ -32,6 +32,7 @@ module.exports = Backbone.Model.extend({
   },
 
   parseColor: function(code) {
+    console.log(code); // Debug
     if(/(^#[0-9A-F]{6}$)|(^#[0-9A-F]{3}$)/i.test(code)) {
       return code;
     }
@@ -64,7 +65,7 @@ module.exports = Backbone.Model.extend({
         reject(error);
       });
     });
-    
+
     //location.update(this.setLocation);
   }
 });
